@@ -27,3 +27,30 @@ services:
 networks:
   backend:
     driver: bridge
+
+  europe:
+    image: "webtrade/europemap"
+    container_name: "europemap_container"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.europe.rule=Host(`europe.magkon.dk`)"
+      - "traefik.http.routers.europe.entrypoints=websecure"
+      - "traefik.http.routers.europe.tls.certresolver=myresolver"
+      - "com.centurylinklabs.watchtower.enable=true"
+  db:
+    image: postgres:latest
+    container_name: db
+    restart: unless-stopped
+    networks:
+      - backend
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: ax2
+    labels:
+      # Watchtower configuration
+      com.centurylinklabs.watchtower.enable: "false" # disables Watchtower for this container
+    volumes:
+      - ./data:/var/lib/postgresql/data/
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
