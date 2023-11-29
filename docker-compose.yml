@@ -25,7 +25,7 @@ services:
       - backend
 
   europe:
-    image: "webtrade/europemap"
+    image: "magkon/cardgame"
     container_name: "europemap_container"
     labels:
       - "traefik.enable=true"
